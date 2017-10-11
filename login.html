@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title> SXY-I 型智能网关登录页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="sxy">
+</head>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+<!--<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>-->
+<![endif]-->
+<link rel="icon" href="images/favicon.png" type="image/x-icon">
+<link class="bootstrap library" rel="stylesheet" type="text/css" href="resource/css/bootstrap.css">
+<!--<script class="bootstrap library" src="./resource/css/bootstrap.css" type="text/javascript"></script>-->
+<script class="bootstrap library" src="resource/js/jquery.min.js" type="text/javascript"></script>
+<script class="bootstrap library" src="resource/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="resource/js/jquery.min.js"></script>
+<script src="resource/js/jquery.cookie.js"></script>
+
+<style>
+    *{margin:0;padding: 0;}
+    body {
+        background-color: #777;
+        font-family:"宋体";
+    }
+    .loginBox {
+        width:420px;
+        height:230px;
+        padding:0 20px;
+        border:1px solid #fff;
+        color:#000;
+        margin-top:40px;
+        border-radius:8px;  background: white;
+        box-shadow:0 0 15px #222;
+        background: -moz-linear-gradient(top, #fff, #efefef 8%);
+        background: -webkit-gradient(linear, 0 0, 0 100%, from(#f6f6f6), to(#f4f4f4));
+        font:11px/1.5em 'Microsoft YaHei' ;
+        position: absolute;left:50%;top:50%;margin-left:-210px;margin-top:-115px;
+    }
+    .loginBox h2 {
+        height:45px;
+        font-size:20px;
+        font-weight:normal;
+    }
+    .loginBox .left {
+        border-right:1px solid #ccc;
+        height:100%;
+        padding-right: 10px;
+        margin:0;
+    }
+    .regBtn {
+        margin-top:18px;
+    }
+    .word {
+        color: #aaa;
+        text-align: justify;
+        padding:2px;
+        margin-top:-15px;
+    }
+    .denglu {
+        margin-top:10px;
+        margin-left:80px;
+    }
+    .zhuce {
+        margin-top:5px;
+    }
+    .banxin {
+        margin-left:auto;
+        margin-right:auto;
+        /*background:url(images/01.png);*/
+        width:1000px;
+        height:667px;
+        background:url(images/01.png);
+    }
+    .title {
+        width:800px;
+        margin:30px auto;
+    }
+    .bottom {
+        width:500px;
+        margin:375px auto 100px auto;
+        text-align:center;
+        color:#888;
+    }
+    .span7{
+        width: 190px;
+        height: 90px;
+        margin:0;
+    }
+    .span1{
+
+    }
+    .mywh1{
+        width: 160px;
+        height: 180px;
+        float:left;
+    }
+    .mywh2{
+        width: 215px;
+        height: 180px;
+        float:left;
+        padding-left:15px;
+    }
+    .myzhuce{
+        float:right;
+    }
+    h1, .h1, h2, .h2, h3, .h3{
+        margin-top: 35px;
+    }
+    #log_err{
+        font-size: 10px;
+        color:red ;
+    }
+    .container{
+        /*background:url(images/01.png);*/
+        width:900px;!important;
+    }
+    .title img{
+        padding-right:200px;
+    }
+</style>
+<script>
+    $(function() {
+        $("#my_login").click(function(){
+            $("#log_err").html("");
+            $("#log_err").html("");e
+            var booluser = $("#postdata_1").val().length >= 6 && $("#postdata_1").val().length <= 15;
+            var boolpwd = $("#postdata_2").val().length >= 8 && $("#postdata_2").val().length <= 20;
+            if(!booluser & !boolpwd){
+                $("#log_err").html("用户名、密码长度均有误");
+            }
+            else if(!booluser){
+                $("#log_err").html("输入用户名长度有误");
+            }
+            else if(!boolpwd){
+                $("#log_err").html("输入密码长度有误");
+            }
+            else ;
+
+            if(booluser & boolpwd) {
+                $.ajax({
+                    url: "../cgi-bin/login.cgi",
+                    dateType: "html",
+                    type: "get",
+                    data: {
+                        "name": $("#postdata_1").val(),
+                        "password": $("#postdata_2").val(),
+                    },
+                    success: function (data) {
+                        if(data == "common"){
+//                          console.log("enter common");
+                            var expiresData = new Data();
+                            //180为3*60分钟，即保存3小时cookie
+                            expiresData.setTime(expiresData.getTime + 180 * 60 * 1000);
+                            window.location.href = "./maincommon.html";
+
+                            $.cookie('flag_login_0','1',{expires: expiresData,path:'./cookies'});
+                        }
+                        else if(data == "high"){
+//                          console.log("enter high");
+                            window.location.href = "./mainhigh.html";
+                            $.cookie('flag_login_1','2',{path:'./cookies'});
+                        }
+                        else {
+                            alert(data);
+                        }
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }
+                })
+            }
+        })
+    })
+
+</script>
+<body>
+<div class="banxin">
+    <div id = "for_jump"></div>
+    <div class="container">
+        <div class="title">
+            <img src="images/login.png" alt="标题图片">
+        </div>
+        <div class="loginBox row-fluid">
+            <div class="span7 left mywh1">
+                <h2>用户登录</h2>
+                <p><input type="text" name="username" placeholder="用户名" id="postdata_1"/></p>
+                <p><input type="text" name="password" placeholder="密码" id="postdata_2"/></p>
+                <div class="row-fluid">
+                    <!--//<section class="span8 lh30"><label><input type="checkbox" name="rememberme" />下次自动登录</label></section>-->
+                    <section class="span1">
+                        <span id="log_err"></span>
+                        <input type="button" value=" 登录 " class="btn btn-primary denglu" id="my_login">
+                    </section>
+                </div>
+            </div>
+            <div class="mywh2">
+                <h2>注册账户</h2>
+                <div>
+                    <p class="word">用户可根据作业需求，申请注册成为普通用户或高级用户。普通用户可观察网关数据的传输；高级用户拥有更高执行权限，如网关发布命令等。</p>
+                    <p>
+                        <a href="register.html" target="_blank"><input type="button" value=" 注册 " class="btn regBtn zhuce myzhuce"></a>
+                    </p>
+                </div>
+            </div>
+        </div><!-- /loginBox -->
+        <div class="bottom">
+            关于网关 | 安全方案 | 交流社区 | 技术支持<br/>CodeWriter @ sxy 2017 - 2018
+        </div>
+    </div> <!-- /container -->
+</div>    
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>网关用户注册</title>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <!--<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>-->
+    <!--[endif]-->
+    <link rel="icon" href="images/favicon.png" type="image/x-icon">
+    <link class="bootstrap library" rel="stylesheet" type="text/css" href="resource/css/bootstrap.css">
+    <script src="resource/js/jquery.min.js"></script>
+    <script src="resource/js/jquery.cookie.js"></script>
+    <script class="bootstrap library" src="resource/js/bootstrap.min.js" type="text/javascript"></script>
+    <style>
+        *{margin:0;padding: 0;font-family: '微软雅黑';}
+        body{
+            height:800px;
+        }
+        .whole {
+            width:1000px;
+            margin: 0 auto 0 auto;
+        }
+        .input {
+            display:block;
+            font-size:18px;
+            width:100px;
+            float: left;
+            padding:3px;
+        }
+        .header{
+            height:150px;
+            position:relative;
+
+        }
+        h1 {
+            font-size:45px;
+            font-weight:normal;
+            color:#686daf;
+            height:50px;
+            position:absolute;
+            top:53px;
+            left:183px;
+        }
+        h2 {
+            font-size:30px;
+            font-weight:normal;
+        }
+        .icon {
+            padding:10px 40px;
+            position:absolute;
+            top:30px;
+            left:20px;
+        }
+        .line {
+            margin:7px 40px;
+            height: 1px;
+            width:800px;
+            background-color: #999;
+        }
+        .input{
+            width:200px;
+        }
+        #nameerr, #pwderr,#checkerr,#nameerr2, #pwderr2,#checkerr2{
+            font-size: 10px;
+            color:red ;
+        }
+        #submit1,#submit2{
+            margin:20px 24.5%;
+        }
+    </style>
+    <script>
+        $(function () {
+            $("#submit1").click(function(){
+                $("#nameerr").html("");
+                $("#pwderr").html("");
+                $("#checkerr").html("");
+                var booluser = $(".whole input")[0].value.length >= 6 && $(".whole input")[0].value.length <=15;
+                var boolpwd = $(".whole input")[1].value.length >= 8 && $(".whole input")[1].value.length <= 20;
+                var boolpwdd = $(".whole input")[2].value == $(".whole input")[1].value;
+                if(!booluser){
+                    $("#nameerr").html("输入用户名长度超出范围");
+                }
+                if(!boolpwd){
+                    $("#pwderr").html("输入密码长度超出范围");
+                }
+                if(!boolpwdd){
+                    $("#checkerr").html("两次密码输入不一致，请重新输入");
+                }
+                if(booluser & boolpwd & boolpwdd){
+                    $.ajax({
+                        url: "../cgi-bin/register.cgi",
+                        dateType: "html",
+                        type: "get",
+                        data:{
+                            "name":     $(".whole input")[0].value,
+                            "password": $(".whole input")[1].value,
+                            "workid":    $(".whole input")[3].value,
+                        },
+                        success: function (data) {
+                            alert(data);
+                        },
+                        error:function(e) {
+                            console.log(e);
+                        }
+                    })
+                }
+
+            })
+            $("#submit2").on('click',function(){
+                $("#nameerr2").html("");
+                $("#pwderr2").html("");
+                $("#checkerr2").html("");
+                var booluser = $(".whole input")[5].value.length >= 6  && $(".whole input")[5].value.length <=15;
+                var boolpwd = $(".whole input")[6].value.length >= 8 && $(".whole input")[6].value.length <= 20;
+                var boolpwdd = $(".whole input")[7].value == $(".whole input")[6].value;
+                if(!booluser){
+                    $("#nameerr2").html("输入用户名长度超出范围");
+                }
+                if(!boolpwd){
+                    $("#pwderr2").html("输入密码长度超出范围");
+                }
+                if(!boolpwdd){
+                    $("#checkerr2").html("两次密码输入不一致，请重新输入");
+                }
+                if(booluser & boolpwd & boolpwdd){
+                    $.ajax({
+                        url: "../cgi-bin/register.cgi",
+                        dateType: "html",
+                        type: "get",
+                        data:{
+                              "name":     $(".whole input")[5].value,
+                              "password": $(".whole input")[6].value,
+                              "workid":    $(".whole input")[8].value,
+                              "personid":  $(".whole input")[9].value
+                        },
+                        success: function (data) {
+                            alert(data);
+                        },
+                        error:function(e) {
+                            console.log(e);
+                        }
+                    })
+                }
+            })
+     })
+    </script>
+</head>
+<body>
+    <div>
+        <div class="header">
+            <img src="images/icon.png" alt="网关标志图" class="icon">
+            <h1>用户注册</h1>
+        </div>
+        <div class="line">
+        </div>
+        <div class="whole">
+            <div>
+                <h2>普通用户注册</h2>
+                <form action="maincgi.cgi" method="get">
+                    <div><span class="input" >用户名：</span><input type="text" placeholder="用户名为6-15个字符"><span id= "nameerr"></span></div>
+                    <br>
+                    <div><span class="input">设置密码：</span><input type="text" placeholder="密码为8-20个字符"><span id = "pwderr"></span></div>
+                    <br>
+                    <div><span class="input">确认密码：</span><input type="text" placeholder="请重新输入一遍密码密码"><span id = "checkerr"></span></div>
+                    <br>
+                    <div><span class="input">工号：</span><input type="text" placeholder="请输入您的工号"></div>
+                    <br>
+                    <div><input id="submit1" type="button" value = "普通用户注册" class="btn btn-primary"></div>
+                </form>
+            </div>
+            <div>
+                <h2>高级用户注册</h2>
+                <form action="">
+                    <div><span class="input">用户名：  </span><input type="text"  placeholder="用户名为6-15个字符"><span id= "nameerr2"></span></div><br>
+                    <div><span class="input">设置密码：</span><input type="text" placeholder="密码为8-20个字符"><span id = "pwderr2"></span></div><br>
+                    <div><span class="input">确认密码：</span><input type="text" placeholder="请重新输入一遍密码"><span id = "checkerr2"></span></div><br>
+                    <div><span class="input">工号：</span><input type="text" placeholder="请输入您的工号"></div><br>
+                    <div><span class="input">身份证号：</span><input type="text" placeholder="请输入您的身份证号"></div><br>
+                    <div><input id="submit2" type="button" value = "高级用户注册" class="btn btn-primary"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
